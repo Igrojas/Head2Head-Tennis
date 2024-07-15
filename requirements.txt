@@ -1,4 +1,2 @@
 pandas
 streamlit
-collections
-pyvis
