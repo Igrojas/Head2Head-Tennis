@@ -112,6 +112,14 @@ En este grafo, consideramos a los tenistas con más de 600 victorias. Los **nodo
 Este enfoque nos permite visualizar de manera clara y dinámica las relaciones y rivalidades más significativas en el tenis, destacando a los jugadores más exitosos y sus enfrentamientos directos.
 """)
 
+st.markdown("""
+En este análisis, utilizamos la centralidad de grado para explorar las interacciones entre tenistas con más de 600 victorias en su carrera.
+             La centralidad de grado se representa con un gradiente de colores, donde tonos más oscuros indican una mayor centralidad.
+             El objetivo es identificar quién es el tenista que ha enfrentado a más jugadores con esta distinción,
+             lo que revela su nivel de competencia frente a los mejores en la historia del tenis.
+
+""")
+
 with open('tennis_top_players.html', 'r', encoding='utf-8') as f:
     html_content = f.read()
     st.components.v1.html(html_content, height=600)
