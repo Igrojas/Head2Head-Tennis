@@ -97,7 +97,7 @@ def grafico_rend_individual(df, jugador):
         point=alt.OverlayMarkDef(filled=False, fill="white")
         ).encode(
             x='año',
-            y='Rendimiento',
+            y=alt.Y('Rendimiento', scale=alt.Scale(domain=[0, 100])),  # definir dominio de la escala y
             # color='symbol:N'
             tooltip=["año", "Rendimiento"]
         ).properties(
@@ -105,4 +105,7 @@ def grafico_rend_individual(df, jugador):
             width= 600,
             # height= 400
         )
-    return chart
+    
+    line = alt.Chart(pd.DataFrame({'y': [80]})).mark_rule(stroke='red').encode(y='y')
+
+    return chart + line
