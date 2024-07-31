@@ -13,10 +13,6 @@ MostWinsDict = json.loads(open('data procesada/most_wins.json', 'r').read())
 TotalPartidos = json.loads(open('data procesada/total_partidos.json', 'r').read())
 H2HDict_str = json.loads(open('data procesada/h2h.json', 'r').read())
 H2HDict = {eval(k): v for k, v in H2HDict_str.items()}
-# with open('data procesada/h2h.json', 'r') as f:
-#     H2HDict_str = json.load(f)
-
-# H2HDict = {eval(k): v for k, v in H2HDict_str.items()}
 
 
 st.title("""
@@ -31,11 +27,24 @@ Datos historicos de los mayores Head to Head de la historia del tenis
 #  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # 
 st.title('Head-to-Head de Tenistas')
 
-nombre_jugador = st.text_input('Ingrese el nombre del tenista', 'Roger Federer')
+# Lista de tenistas importantes
+tenistas_importantes = ['Roger Federer', 'Rafael Nadal', 'Novak Djokovic', 'Pete Sampras',
+                         'Bjorn Borg', 'John McEnroe', 'Jimmy Connors', 'Andre Agassi',
+                           'Andy Murray', 'Stan Wawrinka', 'Carlos Alcaraz', 'Jannik Sinner']
+
+# Menú desplegable con sugerencias
+nombre_jugador = st.selectbox('Seleccione un tenista o ingrese su nombre', tenistas_importantes + ['Otro...'])
+
+# Campo de texto para ingresar un nombre no incluido en la lista
+if nombre_jugador == 'Otro...':
+    nombre_jugador = st.text_input('Ingrese el nombre del tenista')
 
 if nombre_jugador:
     chart = GraficaH2H(nombre_jugador, H2HDict)
     st.altair_chart(chart)
+
+
+
 
 #  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # 
 st.header("""
