@@ -11,11 +11,12 @@ import json
 
 MostWinsDict = json.loads(open('data procesada/most_wins.json', 'r').read())
 TotalPartidos = json.loads(open('data procesada/total_partidos.json', 'r').read())
-
-with open('data procesada/h2h.json', 'r') as f:
-    H2HDict_str = json.load(f)
-
+H2HDict_str = json.loads(open('data procesada/h2h.json', 'r').read())
 H2HDict = {eval(k): v for k, v in H2HDict_str.items()}
+# with open('data procesada/h2h.json', 'r') as f:
+#     H2HDict_str = json.load(f)
+
+# H2HDict = {eval(k): v for k, v in H2HDict_str.items()}
 
 
 st.title("""
