@@ -103,9 +103,6 @@ if nombre_jugador2:
    chart_rend_individual = grafico_rend_individual(rend_individual, nombre_jugador2)
    st.altair_chart(chart_rend_individual)
 
-# chart_rend_individual = grafico_rend_individual(rend_individual, jugador= 'Rafael Nadal')
-
-# st.altair_chart(chart_rend_individual)
 
 #  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # 
 st.header("""
