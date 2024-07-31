@@ -5,10 +5,18 @@ from collections import defaultdict
 import altair as alt
 from pyvis.network import Network
 from utils import *
+import json 
 
-# st.title("""
-#          Análisis mejores tenistas de la historia
-#          """)
+###### CARGA DE ARCHIVOS #####
+
+MostWinsDict = json.loads(open('data procesada/most_wins.json', 'r').read())
+TotalPartidos = json.loads(open('data procesada/total_partidos.json', 'r').read())
+
+with open('data procesada/h2h.json', 'r') as f:
+    H2HDict_str = json.load(f)
+
+H2HDict = {eval(k): v for k, v in H2HDict_str.items()}
+
 
 st.title("""
          Mejores tenistas de la historias
@@ -17,34 +25,6 @@ st.title("""
 st.header("""
 Datos historicos de los mayores Head to Head de la historia del tenis
 """)
-
-file_list = glob.glob('data/atp_matches_*.csv')
-
-MostWinsDict = defaultdict(lambda: {'Victorias': 0, 'Total_Partidos': 0})
-victorias = defaultdict(int)
-TotalPartidos = defaultdict(int)
-H2HDict = defaultdict(lambda: {'total_matches': 0, 'wins_player1': 0, 'wins_player2': 0})
-
-for file in file_list:
-    df = pd.read_csv(file)
-
-    for _, row in df.iterrows():
-        winner = row['winner_name']
-        loser = row['loser_name']
-
-        MostWinsDict[winner]['Victorias'] += 1
-        MostWinsDict[winner]['Total_Partidos'] += 1
-        MostWinsDict[loser]['Total_Partidos'] += 1
-
-        victorias[winner] += 1
-        TotalPartidos[winner] += 1
-        TotalPartidos[loser] += 1
-
-        H2HDict[(winner, loser)]['total_matches'] += 1
-        H2HDict[(loser, winner)]['total_matches'] += 1
-
-        H2HDict[(winner, loser)]['wins_player1'] += 1
-        H2HDict[(loser, winner)]['wins_player2'] += 1
 
 
 #  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # 
