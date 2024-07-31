@@ -106,6 +106,6 @@ def grafico_rend_individual(df, jugador):
             # height= 400
         )
     
-    line = alt.Chart(pd.DataFrame({'y': [80]})).mark_rule(stroke='red').encode(y='y')
+    line = alt.Chart(pd.DataFrame({'y': [80]})).mark_rule(stroke='red').encode()
 
     return chart + line
