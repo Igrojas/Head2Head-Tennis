@@ -13,19 +13,32 @@ MostWinsDict = json.loads(open('data procesada/most_wins.json', 'r').read())
 TotalPartidos = json.loads(open('data procesada/total_partidos.json', 'r').read())
 H2HDict_str = json.loads(open('data procesada/h2h.json', 'r').read())
 H2HDict = {eval(k): v for k, v in H2HDict_str.items()}
-
+rend_individual = pd.read_excel("data procesada/resultados_tenis.xlsx")
 
 st.title("""
-         Mejores tenistas de la historias
+         Recorrido por los números de grandes tenistas de la historia
          """)
 
-st.header("""
-Datos historicos de los mayores Head to Head de la historia del tenis
-""")
+
 
 
 #  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # 
-st.title('Head-to-Head de Tenistas')
+
+
+st.markdown("""
+Los datos son sacados del repositorio de [JeffSackmann](https://github.com/JeffSackmann/tennis_atp), 
+que contiene datos históricos de cada partido de la historia del tenis desde 1968 hasta la actualidad en 2024.
+
+Para nuestro caso, ocupamos los datos hasta 2023.
+""")
+
+st.header('Head-to-Head de Tenistas')
+st.write("""
+El Head to Head (H2H) es una estadística que compara el historial de enfrentamientos entre dos tenistas.
+Muestra quién ha ganado más partidos entre los dos, proporcionando una visión rápida de su rivalidad y dominio mutuo.
+         
+**Los principales rivales de cada tenista importante en la historia suelen ser otros grandes jugadores de la historia.**
+""")
 
 # Lista de tenistas importantes
 tenistas_importantes = ['Roger Federer', 'Rafael Nadal', 'Novak Djokovic', 'Pete Sampras',
@@ -51,25 +64,62 @@ st.header("""
 Tenistas con mas victorias en la historia del tenis
 """)
 
+st.markdown("""El siguiente gráfico muestra a los tenistas con más de 600 victorias en su carrera profesional.
+         
+**¿Son los mejores los que más ganan?**         
+""")
+
 
 chart_victorias = GraficaMasVictorias(MostWinsDict)
 st.altair_chart(chart_victorias)
  
 
-#  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # 
-st.header("""
-Tenistas con mejor rendimiento 
-""")
-chart_rendimiento = GraficaRendimiento(MostWinsDict)
+st.header("Rendimiento individual por año ")
 
+st.markdown("""
+El rendimiento individual es el porcentaje de victorias respecto al total de partidos
+            
+**Un jugador con 90% quiere decir que tiene en 100 partidos jugados, 90 victorias.**
+""")
 st.latex(r'''
 Rendimiento = \frac{\text{Victorias}}{\text{Total de Partidos}}
 ''')
 
+# Lista de tenistas importantes
+jugador = ['Roger Federer', 'Rafael Nadal', 'Novak Djokovic', 'Pete Sampras',
+            'Bjorn Borg', 'John McEnroe', 'Jimmy Connors', 'Andre Agassi',
+            'Andy Murray', 'Stan Wawrinka', 'Carlos Alcaraz', 'Jannik Sinner']
 
-st.write("""
-El rendimiento se calcula dividiendo el número de victorias por el total de partidos jugados.
-          Esta fórmula nos da una medida de la efectividad del jugador en términos de victorias.
+# Menú desplegable con sugerencias
+seleccion_jugador = st.selectbox('Seleccione un tenista o ingrese su nombre', jugador + ['Otro...'], key='jugador2')
+
+# Campo de texto para ingresar un nombre no incluido en la lista
+if seleccion_jugador == 'Otro...':
+    nombre_jugador2 = st.text_input('Ingrese el nombre del tenista', key='texto2')
+else:
+    nombre_jugador2 = seleccion_jugador
+
+if nombre_jugador2:
+   chart_rend_individual = grafico_rend_individual(rend_individual, nombre_jugador2)
+   st.altair_chart(chart_rend_individual)
+
+# chart_rend_individual = grafico_rend_individual(rend_individual, jugador= 'Rafael Nadal')
+
+# st.altair_chart(chart_rend_individual)
+
+#  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # #  # # # # # 
+st.header("""
+Tenistas con mejor rendimiento en su carrera
+""")
+
+chart_rendimiento = GraficaRendimiento(MostWinsDict)
+
+st.markdown("""
+Esta gráfica muestra el rendimiento global de un jugador de tenis hasta el año 2023.
+            
+Es importante la aparición de Carlos Alcaraz con 78% en 198 partidos.
+
+**¿Es el mejor el con mejor rendimiento?**
 """)
 
 st.altair_chart(chart_rendimiento)

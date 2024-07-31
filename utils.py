@@ -42,18 +42,6 @@ def GraficaH2H(nombre_jugador, H2HDict):
 
 def GraficaMasVictorias(MostWinsDict):
 
-    # for player, stats in MostWinsDict.items():
-    #     victorias = stats['Victorias']
-    #     total_partidos = stats['Total_Partidos']
-        
-    #     # Calcular el rendimiento y almacenarlo en el diccionario
-    #     if total_partidos > 0:
-    #         rendimiento = victorias / total_partidos
-    #     else:
-    #         rendimiento = 0.0
-        
-    #     MostWinsDict[player]['Rendimiento'] = rendimiento
-
     df_most_wins = pd.DataFrame.from_dict(MostWinsDict, orient='index').reset_index()
     df_most_wins = df_most_wins.rename(columns={'index': 'Jugador'})
 
@@ -82,7 +70,7 @@ def GraficaRendimiento(MostWinsDict):
         x=alt.X('Rendimiento:Q', title='Rendimiento'),
         y=alt.Y('Jugador:N', title='Jugador', sort='-x'),
         color=alt.Color('Jugador:N',  legend=None),
-        tooltip=['Jugador', 'Rendimiento']
+        tooltip=['Jugador', 'Rendimiento','Total_Partidos']
     ).properties(
         title='Top 20 jugadores con mejor rendimiento (más de 100 partidos)',
         width=600
@@ -100,3 +88,21 @@ def GraficaRendimiento(MostWinsDict):
     chart_rendimiento = (chart_rendimiento + text).interactive()
 
     return chart_rendimiento
+
+def grafico_rend_individual(df, jugador):
+    # jugador = "Rafael Nadal"
+    rend_jugador = df[df["jugador"] == jugador]
+
+    chart = alt.Chart(rend_jugador).mark_line(
+        point=alt.OverlayMarkDef(filled=False, fill="white")
+        ).encode(
+            x='año',
+            y='Rendimiento',
+            # color='symbol:N'
+            tooltip=["año", "Rendimiento"]
+        ).properties(
+            title = 'Rendimiento por año de ' + jugador,
+            width= 600,
+            # height= 400
+        )
+    return chart
