@@ -11,6 +11,8 @@ export interface StyledNode {
   totalMatches: number
   winRate: number
   centrality: number
+  /** Top 5 por centralidad dentro del recorte filtrado actual: recibe el anillo distintivo de "hub". */
+  isHub: boolean
 }
 
 export interface StyledEdge {
@@ -21,6 +23,9 @@ export interface StyledEdge {
   totalMatches: number
   winsSource: number
   winsTarget: number
+  /** 0..1, qué tan intensa es esta rivalidad respecto al máximo de enfrentamientos del recorte actual. */
+  intensity: number
+  color: string
 }
 
 export const LAYOUT_LABELS: Record<LayoutName, string> = {

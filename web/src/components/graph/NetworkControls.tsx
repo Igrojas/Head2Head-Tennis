@@ -45,19 +45,19 @@ export function NetworkControls({
   onToggleExpanded,
 }: NetworkControlsProps) {
   return (
-    <div className="flex flex-col gap-4 border-b border-court-800 bg-court-900/70 p-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
+    <div className="flex flex-col gap-4 border-b border-ink-800 bg-ink-900/70 p-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
       <div className="flex flex-1 flex-col gap-4 sm:flex-row sm:flex-wrap">
         <div className="min-w-[220px]">
-          <label className="mb-1 block text-xs font-medium text-court-300">
+          <label className="mb-1 block text-xs font-medium text-ink-300">
             Buscar y saltar a un jugador
           </label>
           <PlayerCombobox players={searchPlayers} value={null} onChange={onSearchSelect} placeholder="Ej: Rafael Nadal" />
         </div>
 
         <div className="min-w-[220px] flex-1 max-w-xs">
-          <label className="mb-1 flex justify-between text-xs font-medium text-court-300">
+          <label className="mb-1 flex justify-between text-xs font-medium text-ink-300">
             <span>Mínimo de victorias</span>
-            <span className="text-white">{minWins}</span>
+            <span className="text-paper">{minWins}</span>
           </label>
           <input
             type="range"
@@ -65,14 +65,14 @@ export function NetworkControls({
             max={minWinsBounds[1]}
             value={minWins}
             onChange={(e) => onMinWinsChange(Number(e.target.value))}
-            className="w-full accent-ace-400"
+            className="w-full accent-clay-400"
           />
         </div>
 
         <div className="min-w-[220px] flex-1 max-w-xs">
-          <label className="mb-1 flex justify-between text-xs font-medium text-court-300">
+          <label className="mb-1 flex justify-between text-xs font-medium text-ink-300">
             <span>Mínimo de enfrentamientos por arista</span>
-            <span className="text-white">{minEdgeMatches}</span>
+            <span className="text-paper">{minEdgeMatches}</span>
           </label>
           <input
             type="range"
@@ -80,16 +80,16 @@ export function NetworkControls({
             max={edgeMatchesBounds[1]}
             value={minEdgeMatches}
             onChange={(e) => onMinEdgeMatchesChange(Number(e.target.value))}
-            className="w-full accent-clay-400"
+            className="w-full accent-plum-400"
           />
         </div>
 
         <div className="min-w-[180px]">
-          <label className="mb-1 block text-xs font-medium text-court-300">Layout</label>
+          <label className="mb-1 block text-xs font-medium text-ink-300">Layout</label>
           <select
             value={layoutName}
             onChange={(e) => onLayoutChange(e.target.value as LayoutName)}
-            className="w-full rounded-lg border border-court-700 bg-court-900 px-3 py-2 text-sm text-white outline-none focus:border-ace-400/60"
+            className="w-full rounded-lg border border-ink-700 bg-ink-900 px-3 py-2 text-sm text-paper outline-none focus:border-clay-400/60"
           >
             {Object.entries(LAYOUT_LABELS).map(([value, label]) => (
               <option key={value} value={value}>
@@ -101,10 +101,10 @@ export function NetworkControls({
       </div>
 
       <div className="flex items-end gap-4">
-        <p className="whitespace-nowrap text-xs text-court-300">
-          <span className="text-white">{nodeCount}</span> jugadores ·{' '}
-          <span className="text-white">{edgeCount}</span> enfrentamientos
-          {nodeCount > 60 && <span className="block text-court-300/70">Etiquetas ocultas: usa la búsqueda o el hover</span>}
+        <p className="whitespace-nowrap text-xs text-ink-300">
+          <span className="text-paper">{nodeCount}</span> jugadores ·{' '}
+          <span className="text-paper">{edgeCount}</span> enfrentamientos
+          {nodeCount > 60 && <span className="block text-ink-300/70">Etiquetas ocultas: usa la búsqueda o el hover</span>}
         </p>
         <div className="flex gap-1.5">
           <IconButton onClick={onZoomIn} title="Acercar">
@@ -135,7 +135,7 @@ function IconButton({ children, onClick, title }: { children: ReactNode; onClick
       onClick={onClick}
       title={title}
       aria-label={title}
-      className="grid h-9 w-9 place-items-center rounded-lg border border-court-700 text-court-200 transition-colors hover:border-court-500 hover:text-white"
+      className="grid h-9 w-9 place-items-center rounded-lg border border-ink-700 text-ink-200 transition-colors hover:border-ink-500 hover:text-paper"
     >
       {children}
     </button>

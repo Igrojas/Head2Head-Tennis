@@ -1,23 +1,49 @@
 @import 'tailwindcss';
 
+/*
+ * Paleta inspirada en los cuatro Grand Slam, cada uno con un rol fijo en la
+ * UI (no es decoración libre): Roland Garros (arcilla) es el acento
+ * primario/cálido; Wimbledon (ciruela) el secundario/frío; Australian Open
+ * (azul pista) el terciario, de uso escaso; y el amarillo-pelota — antes
+ * usado en todas partes como color de acento por defecto — queda reservado
+ * como "foco" del US Open: solo para selección/estado activo, nunca como
+ * color de UI genérico.
+ */
 @theme {
-  --font-sans: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Manrope', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Public Sans', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-score: 'Big Shoulders Display', 'Public Sans', system-ui, sans-serif;
 
-  --color-court-950: #0a0f0c;
-  --color-court-900: #0f1712;
-  --color-court-850: #131d17;
-  --color-court-800: #182720;
-  --color-court-700: #24382f;
-  --color-court-600: #34513f;
-  --color-court-500: #4a7057;
-  --color-court-300: #8fb89e;
-  --color-court-200: #c3ddca;
+  --color-ink-950: #0a0f0c;
+  --color-ink-900: #0f1712;
+  --color-ink-850: #131d17;
+  --color-ink-800: #182720;
+  --color-ink-700: #24382f;
+  --color-ink-600: #34513f;
+  --color-ink-500: #4a7057;
+  --color-ink-300: #8fb89e;
+  --color-ink-200: #c3ddca;
 
-  --color-clay-500: #c96a3e;
-  --color-clay-400: #dd8a5f;
-  --color-clay-300: #ecad86;
+  --color-paper: #f3efe4;
 
+  /* Roland Garros — arcilla, acento primario */
+  --color-clay-600: #8f3a1c;
+  --color-clay-500: #c2572a;
+  --color-clay-400: #dd7c4c;
+  --color-clay-300: #eda57c;
+
+  /* Wimbledon — ciruela, acento secundario */
+  --color-plum-600: #3c1c5c;
+  --color-plum-500: #5b2a86;
+  --color-plum-400: #8256ad;
+  --color-plum-300: #ab86c7;
+
+  /* Australian Open — azul pista dura, acento terciario (uso escaso) */
+  --color-royal-500: #2554c7;
+  --color-royal-400: #5b82e0;
+  --color-royal-300: #93aeed;
+
+  /* US Open — foco, exclusivo para selección/estado activo */
   --color-ace-400: #d7ff5f;
   --color-ace-300: #e6ff97;
 }
@@ -28,8 +54,8 @@ html {
 
 body {
   margin: 0;
-  background: var(--color-court-950);
-  color: #eef3ee;
+  background: var(--color-ink-950);
+  color: var(--color-paper);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -43,7 +69,7 @@ body {
 
 ::selection {
   background: var(--color-ace-400);
-  color: var(--color-court-950);
+  color: var(--color-ink-950);
 }
 
 /* Scrollbar (webkit) para que combine con el tema oscuro */
@@ -52,16 +78,44 @@ body {
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-court-900);
+  background: var(--color-ink-900);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-court-600);
+  background: var(--color-ink-600);
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-court-500);
+  background: var(--color-ink-500);
 }
 
 .font-display {
   font-family: var(--font-display);
+}
+
+.font-score {
+  font-family: var(--font-score);
+  font-feature-settings: 'tnum' 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+@keyframes panel-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.panel-enter {
+  animation: panel-enter 320ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel-enter {
+    animation: none;
+  }
 }

@@ -67,7 +67,7 @@ export function PlayerCombobox({ players, value, onChange, placeholder, quickPic
           }
         }}
         placeholder={placeholder ?? 'Busca un tenista…'}
-        className="w-full rounded-lg border border-court-700 bg-court-900 px-4 py-2.5 text-sm text-white placeholder:text-court-300/50 outline-none ring-ace-400/40 focus:border-ace-400/60 focus:ring-2"
+        className="w-full rounded-lg border border-ink-700 bg-ink-900 px-4 py-2.5 text-sm text-paper placeholder:text-ink-300/50 outline-none ring-clay-400/40 focus:border-clay-400/60 focus:ring-2"
       />
 
       {quickPicks && quickPicks.length > 0 && (
@@ -79,8 +79,8 @@ export function PlayerCombobox({ players, value, onChange, placeholder, quickPic
               onClick={() => pick(name)}
               className={`rounded-full border px-2.5 py-1 text-xs transition-colors ${
                 value === name
-                  ? 'border-ace-400 bg-ace-400/10 text-ace-300'
-                  : 'border-court-700 text-court-300 hover:border-court-500 hover:text-white'
+                  ? 'border-clay-400 bg-clay-400/10 text-clay-300'
+                  : 'border-ink-700 text-ink-300 hover:border-ink-500 hover:text-paper'
               }`}
             >
               {name}
@@ -90,7 +90,7 @@ export function PlayerCombobox({ players, value, onChange, placeholder, quickPic
       )}
 
       {open && results.length > 0 && (
-        <ul className="absolute z-20 mt-1 max-h-80 w-full overflow-auto rounded-lg border border-court-700 bg-court-850 shadow-xl shadow-black/40">
+        <ul className="absolute z-20 mt-1 max-h-80 w-full overflow-auto rounded-lg border border-ink-700 bg-ink-850 shadow-xl shadow-black/40">
           {results.map((p, i) => (
             <li key={p.name}>
               <button
@@ -98,11 +98,11 @@ export function PlayerCombobox({ players, value, onChange, placeholder, quickPic
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => pick(p.name)}
                 className={`flex w-full items-center justify-between px-4 py-2 text-left text-sm ${
-                  i === highlight ? 'bg-court-700 text-white' : 'text-court-200 hover:bg-court-800'
+                  i === highlight ? 'bg-ink-700 text-paper' : 'text-ink-200 hover:bg-ink-800'
                 }`}
               >
                 <span>{p.name}</span>
-                <span className="text-xs text-court-300">{p.wins}V · {p.winRate.toFixed(0)}%</span>
+                <span className="text-xs text-ink-300">{p.wins}V · {p.winRate.toFixed(0)}%</span>
               </button>
             </li>
           ))}
