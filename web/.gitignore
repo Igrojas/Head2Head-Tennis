@@ -1,0 +1,30 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Datos generados por scripts/export_web_data.py a partir de data procesada/:
+# no se versionan (varios miles de archivos, ~33MB). Se generan con
+# `python3 scripts/export_web_data.py` (ver README) antes de correr la app.
+public/data/*
+!public/data/.gitkeep
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
