@@ -23,7 +23,7 @@ export function H2HChart({ player }: { player: string | null }) {
   if (top.length === 0) return <EmptyState>No hay enfrentamientos registrados para {player}.</EmptyState>
 
   return (
-    <div className="h-[420px] w-full rounded-xl border border-court-800 bg-court-900/50 p-4">
+    <div className="h-[420px] w-full rounded-xl border border-ink-800 bg-ink-900/50 p-4">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={top} layout="vertical" margin={{ top: 8, right: 24, bottom: 8, left: 8 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#24382f" horizontal={false} />
@@ -32,13 +32,13 @@ export function H2HChart({ player }: { player: string | null }) {
             type="category"
             dataKey="rival"
             stroke="#8fb89e"
-            tick={{ fontSize: 12, fill: '#eef3ee' }}
+            tick={{ fontSize: 12, fill: '#f3efe4' }}
             width={150}
           />
-          <Tooltip content={<ChartTooltip />} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />
+          <Tooltip content={<ChartTooltip />} cursor={{ fill: 'rgba(243,239,228,0.04)' }} />
           <Legend wrapperStyle={{ fontSize: 12, color: '#c3ddca' }} />
-          <Bar dataKey="wins" name="Victorias" stackId="a" fill="#d7ff5f" />
-          <Bar dataKey="losses" name="Derrotas" stackId="a" fill="#c96a3e" radius={[0, 4, 4, 0]} />
+          <Bar dataKey="wins" name="Victorias" stackId="a" fill="#c2572a" />
+          <Bar dataKey="losses" name="Derrotas" stackId="a" fill="#5b2a86" radius={[0, 4, 4, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

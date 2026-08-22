@@ -24,11 +24,24 @@ function lerpColor(a: string, b: string, t: number): [number, number, number] {
   return [ar + (br - ar) * t, ag + (bg - ag) * t, ab + (bb - ab) * t]
 }
 
-// Escala de "centralidad": frío (poco conectado) -> cálido (hub de rivalidades).
-const STOPS = ['#33475a', '#c96a3e', '#ffd166']
+// Escala de "centralidad": ciruela (Wimbledon, poco conectado) -> arcilla
+// (Roland Garros, conectado) -> amarillo-pelota (US Open, hub de la red).
+// El amarillo queda en el extremo superior: solo lo llevan los jugadores más
+// conectados, así el "foco" de la paleta señala justo lo más importante.
+const CENTRALITY_STOPS = ['#5b2a86', '#c2572a', '#d7ff5f']
 
 export function centralityColor(t: number): string {
   const clamped = clamp(t, 0, 1)
-  if (clamped <= 0.5) return rgbToHex(lerpColor(STOPS[0], STOPS[1], clamped / 0.5))
-  return rgbToHex(lerpColor(STOPS[1], STOPS[2], (clamped - 0.5) / 0.5))
+  if (clamped <= 0.5) return rgbToHex(lerpColor(CENTRALITY_STOPS[0], CENTRALITY_STOPS[1], clamped / 0.5))
+  return rgbToHex(lerpColor(CENTRALITY_STOPS[1], CENTRALITY_STOPS[2], (clamped - 0.5) / 0.5))
+}
+
+// Escala de "intensidad de rivalidad" para aristas: gris-verdoso apagado
+// (pocos cruces) -> arcilla brillante (rivalidad histórica, muchos cruces).
+// A diferencia de centralityColor, esta no toca el amarillo: así una arista
+// nunca compite visualmente con el amarillo reservado para selección/hubs.
+const EDGE_STOPS = ['#3a5245', '#c2572a']
+
+export function edgeIntensityColor(t: number): string {
+  return rgbToHex(lerpColor(EDGE_STOPS[0], EDGE_STOPS[1], clamp(t, 0, 1)))
 }

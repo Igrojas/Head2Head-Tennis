@@ -3,22 +3,32 @@ import { useFetchJSON } from '../../lib/useFetchJSON'
 import { useDebouncedValue } from '../../lib/useDebouncedValue'
 import { dataUrl } from '../../lib/paths'
 import { degreeCentrality } from '../../lib/centrality'
-import { centralityColor, linScale } from '../../lib/scales'
+import { centralityColor, edgeIntensityColor, linScale } from '../../lib/scales'
 import type { NetworkData } from '../../types'
 import { Loader, ErrorState } from '../common/AsyncState'
 import { NetworkCanvas, type NetworkCanvasHandle } from './NetworkCanvas'
 import { NetworkControls } from './NetworkControls'
 import { NetworkLegend } from './NetworkLegend'
 import { NodeTooltip } from './NodeTooltip'
+import { EdgeTooltip } from './EdgeTooltip'
 import { PlayerDetailPanel } from './PlayerDetailPanel'
 import type { LayoutName, StyledEdge, StyledNode } from './types'
 
 const DEFAULT_MIN_WINS = 600
 const DEFAULT_MIN_EDGE_MATCHES = 1
 const DEFAULT_LAYOUT: LayoutName = 'fcose'
+// Cuántos nodos por centralidad reciben el anillo de "hub" — una pista visual
+// para no depender solo del color al identificar quién domina la red.
+const HUB_COUNT = 5
 
 interface HoverInfo {
   node: StyledNode
+  x: number
+  y: number
+}
+
+interface EdgeHoverInfo {
+  edge: StyledEdge
   x: number
   y: number
 }
@@ -50,6 +60,7 @@ function NetworkGraphReady({ data, onSelectPlayer }: { data: NetworkData; onSele
   const [layoutName, setLayoutName] = useState<LayoutName>(DEFAULT_LAYOUT)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [hover, setHover] = useState<HoverInfo | null>(null)
+  const [edgeHover, setEdgeHover] = useState<EdgeHoverInfo | null>(null)
   const [expanded, setExpanded] = useState(false)
   const [pendingFocusId, setPendingFocusId] = useState<string | null>(null)
   const canvasRef = useRef<NetworkCanvasHandle>(null)
@@ -74,6 +85,15 @@ function NetworkGraphReady({ data, onSelectPlayer }: { data: NetworkData; onSele
 
   const centralityMap = useMemo(() => degreeCentrality(filteredNodes, filteredEdges), [filteredNodes, filteredEdges])
 
+  const hubIds = useMemo(() => {
+    return new Set(
+      [...centralityMap.entries()]
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, HUB_COUNT)
+        .map(([id]) => id),
+    )
+  }, [centralityMap])
+
   const { styledNodes, styledEdges, nodesById } = useMemo(() => {
     const nodeWins = filteredNodes.map((n) => n.wins)
     const wMin = Math.min(...nodeWins, 0)
@@ -91,22 +111,31 @@ function NetworkGraphReady({ data, onSelectPlayer }: { data: NetworkData; onSele
       totalMatches: n.totalMatches,
       winRate: n.winRate,
       centrality: centralityMap.get(n.id) ?? 0,
-      size: linScale(n.wins, wMin, wMax, 26, 92),
+      // Rango amplio (18–128px) a propósito: con poca diferencia entre extremos
+      // los nodos se leen todos "iguales". El exponente 0.85 además separa un
+      // poco más el grueso de la distribución, no solo los outliers.
+      size: 18 + ((n.wins - wMin) / Math.max(1, wMax - wMin)) ** 0.85 * (128 - 18),
       color: centralityColor(centralityMap.get(n.id) ?? 0),
+      isHub: hubIds.has(n.id),
     }))
 
-    const edges: StyledEdge[] = filteredEdges.map((e) => ({
-      id: `${e.source}__${e.target}`,
-      source: e.source,
-      target: e.target,
-      totalMatches: e.totalMatches,
-      winsSource: e.winsSource,
-      winsTarget: e.winsTarget,
-      width: linScale(Math.sqrt(e.totalMatches), 1, Math.sqrt(eMax), 1, 6),
-    }))
+    const edges: StyledEdge[] = filteredEdges.map((e) => {
+      const intensity = e.totalMatches / eMax
+      return {
+        id: `${e.source}__${e.target}`,
+        source: e.source,
+        target: e.target,
+        totalMatches: e.totalMatches,
+        winsSource: e.winsSource,
+        winsTarget: e.winsTarget,
+        width: linScale(Math.sqrt(e.totalMatches), 1, Math.sqrt(eMax), 1.4, 9),
+        intensity,
+        color: edgeIntensityColor(intensity),
+      }
+    })
 
     return { styledNodes: nodes, styledEdges: edges, nodesById: new Map(nodes.map((n) => [n.id, n])) }
-  }, [filteredNodes, filteredEdges, centralityMap])
+  }, [filteredNodes, filteredEdges, centralityMap, hubIds])
 
   // Foco pendiente desde la búsqueda: espera a que el nodo exista en el set filtrado.
   useEffect(() => {
@@ -146,8 +175,8 @@ function NetworkGraphReady({ data, onSelectPlayer }: { data: NetworkData; onSele
     <div
       className={
         expanded
-          ? 'fixed inset-0 z-40 flex flex-col bg-court-950'
-          : 'flex flex-col overflow-hidden rounded-xl border border-court-800'
+          ? 'fixed inset-0 z-40 flex flex-col bg-ink-950'
+          : 'flex flex-col overflow-hidden rounded-xl border border-ink-800'
       }
     >
       <NetworkControls
@@ -181,7 +210,7 @@ function NetworkGraphReady({ data, onSelectPlayer }: { data: NetworkData; onSele
       />
 
       <div className={`flex flex-1 flex-col sm:flex-row ${expanded ? '' : 'h-[75vh] min-h-[560px]'}`}>
-        <div className="relative flex-1 bg-court-950">
+        <div className="relative flex-1 bg-ink-950">
           <NetworkCanvas
             ref={canvasRef}
             nodes={styledNodes}
@@ -190,8 +219,10 @@ function NetworkGraphReady({ data, onSelectPlayer }: { data: NetworkData; onSele
             selectedId={selectedId}
             onSelect={setSelectedId}
             onHover={setHover}
+            onEdgeHover={setEdgeHover}
           />
           {hover && <NodeTooltip node={hover.node} x={hover.x} y={hover.y} />}
+          {!hover && edgeHover && <EdgeTooltip edge={edgeHover.edge} x={edgeHover.x} y={edgeHover.y} />}
         </div>
 
         {selectedNode && (
